@@ -20,7 +20,7 @@ function GradientDescent(subunits::Vector{Subunit}, step_size::Float64)
     return GradientDescent(subunits, step_size, 0.0, 0.0, 0)
 end
 
-function update_subunits!(integrator::TemperatureQuench)
+function update_subunits!(integrator::GradientDescent)
     δ = integrator.step_size
     ampl = integrator.ampl
     Threads.@threads for subunit in integrator.subunits

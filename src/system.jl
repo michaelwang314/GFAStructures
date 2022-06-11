@@ -29,7 +29,7 @@ end
 initialize_lattice(unit_cell::Vector{Subunit}, lattice_vectors::NTuple{2, Vector{Float64}}, lattice_dimensions::NTuple{2, Int64}) = initialize_lattice(unit_cell, (lattice_vectors[1], lattice_vectors[2], [0.0, 0.0, 1.0]), (lattice_dimensions[1], lattice_dimensions[2], 1))
 
 function link(subunits::Vector{Subunit}, interactions::Vector{Tuple{Int64, Int64, I}}, neighbor_cutoff::Float64, bond_cutoff::Float64) where I <: Interaction
-    bonds = Vector{Bond}()
+    bonds = Vector{Bond{I}}()
     
     N_sub = length(subunits)
     for i = 1 : N_sub - 1, j = i + 1 : N_sub

@@ -117,5 +117,21 @@ function format_for_mathematica!(system::System; params = [], file::String = "TE
         mkpath(dirname(file))
     end
 
+    param_str = "{"
+    for p in params
+        param_str *= "$p,"
+    end
+    param_str *= "}"
 
+    subunit_data = "{"
+    for subunit in system.subunits
+        x, y, z = subunit.position
+        b1, b2 = subunit.body_axis
+        subunit_data *= "{{$x, $y, $z}, {$(b1[1]), $(b1[2]), $(b1[3])}, {$(b2[1]), $(b2[2]), $(b2[3])}, $param_str},"
+    end
+    subunit_data = replace(chop(subunit_data) * "}", "e" => "*^")
+
+    open(file, "w") do io
+        write(io, subunit_data)
+    end
 end

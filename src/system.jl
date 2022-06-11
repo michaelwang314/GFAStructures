@@ -35,11 +35,19 @@ function link(subunits::Vector{Subunit}, interactions::Vector{Tuple{Int64, Int64
         sub1, sub2 = subunits[i], subunits[j]
         sub1_pos, sub2_pos = sub_i.position, sub_j.position
         if (sub1_pos[1] - sub2_pos[1])^2 + (sub1_pos[2] - sub2_pos[2])^2 + (sub1_pos[3] - sub2_pos[3])^2 <= neighbor_cutoff^2
-            for (id1, id2, int) in interactions
+            for (id1, id2, interaction) in interactions
                 site1, site2 = sub1.binding_sites[id1], sub2.binding_sites[id2]
                 site1_pos, site2_pos = site1.position, site2.position
                 if (site1_pos[1] - site2_pos[1])^2 + (site1_pos[2] - site2_pos[2])^2 + (site1_pos[3] - site2_pos[3])^2 <= bond_cutoff^2
-                    push!(bonds, Bond((site1, site2), int))
+                    push!(bonds, Bond((site1, site2), interaction))
+                end
+
+                if id1 != id2
+                    site1, site2 = sub1.binding_sites[id2], sub2.binding_sites[id1]
+                    site1_pos, site2_pos = site1.position, site2.position
+                    if (site1_pos[1] - site2_pos[1])^2 + (site1_pos[2] - site2_pos[2])^2 + (site1_pos[3] - site2_pos[3])^2 <= bond_cutoff^2
+                        push!(bonds, Bond((site1, site2), interaction))
+                    end
                 end
             end
         end

@@ -5,12 +5,13 @@ export Bond
 
 mutable struct BindingSite
     position::MVector{3, Float64}
+    force::MVector{3, Float64}
 
     energy::Float64
 end
 
 function BindingSite(position::V) where V <: AbstractVector
-    return BindingSite(MVector{3}(position), 0.0)
+    return BindingSite(MVector{3}(position), MVector(0.0, 0.0, 0.0), 0.0)
 end
 
 abstract type Interaction end

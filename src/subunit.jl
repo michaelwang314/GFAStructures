@@ -6,9 +6,8 @@ mutable struct Subunit
     position::MVector{3, Float64}
     binding_sites::Vector{BindingSite}
 
-    body_axis::Tuple{MVector{3, Float64}, MVector{3, Float64}}
+    body_axis::NTuple{2, MVector{3, Float64}}
 end
-
 
 function rotate!(subunit::Subunit, axis_x::Float64, axis_y::Float64, axis_z::Float64, θ::Float64)
     sin, cos = sincos(θ)

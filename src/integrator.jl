@@ -5,11 +5,11 @@ mutable struct TemperatureQuench
 
     step_size::Float64
 
-    T_start::Float64
+    T::Float64
     ΔT::Float64
-    quench_steps::Int64
+    quench_duration::Int64
 end
 
 function update_subunits!(integrator::TemperatureQuench)
-    
+
 end

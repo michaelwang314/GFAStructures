@@ -8,7 +8,7 @@ mutable struct System
     subunits::Vector{Subunit}
     bonds::Vector{Bond}
 
-    integrator::TemperatureQuench
+    integrator::GradientDescent
 end
 
 function initialize_lattice(unit_cell::Vector{Subunit}, lattice_vectors::NTuple{3, Vector{Float64}}, lattice_dimensions::NTuple{3, Int64})

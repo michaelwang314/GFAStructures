@@ -4,9 +4,9 @@ export link
 export run_simulation!
 export format_for_mathematica!
 
-mutable struct System
+mutable struct System{I <: Interaction}
     subunits::Vector{Subunit}
-    bonds::Vector{Bond}
+    bonds::Vector{Bond{I}}
 
     integrator::GradientDescent
 end
@@ -83,8 +83,7 @@ function hr_min_sec(time::Float64)
                   seconds < 10 ? ":0" : ":", seconds)
 end
 
-function run_simulation!(system::System; num_steps::Int64 = 1, message_interval::Float64 = 10.0)
-
+function run_simulation!(system::System{I}; num_steps::Int64 = 1, message_interval::Float64 = 10.0) where I <: Interaction
     prev_step = 0
     time_elapsed = 0.0
     interval_start = time()

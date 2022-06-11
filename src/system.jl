@@ -84,6 +84,10 @@ function hr_min_sec(time::Float64)
 end
 
 function run_simulation!(system::System{I}; num_steps::Int64 = 1, message_interval::Float64 = 10.0) where I <: Interaction
+    println("Simulation started.............................................")
+    println("Number of subunits: ", length(system.subunits))
+    println("Number of bonds: ", length(system.bonds))
+    
     prev_step = 0
     time_elapsed = 0.0
     interval_start = time()
@@ -105,6 +109,7 @@ function run_simulation!(system::System{I}; num_steps::Int64 = 1, message_interv
         end
     end
     println("Average steps/s: ", round(num_steps / time_elapsed, digits = 1))
+    println("Simulation done.................................................")
 end
 
 function format_for_mathematica!(system::System; params = [], file::String = "TEMP.txt")

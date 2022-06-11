@@ -2,12 +2,15 @@ export BindingSite
 export Interaction
 export Harmonic
 export Bond
-export compute_forces!
 
 mutable struct BindingSite
     position::MVector{3, Float64}
 
     energy::Float64
+end
+
+function BindingSite(position::V) where V <: AbstractVector
+    return BindingSite(MVector{3}(position))
 end
 
 abstract type Interaction end

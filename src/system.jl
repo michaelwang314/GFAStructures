@@ -1,4 +1,8 @@
 export System
+export initialize_lattice
+export link
+export run_simulation!
+export format_for_mathematica!
 
 mutable struct System
     subunits::Vector{Subunit}

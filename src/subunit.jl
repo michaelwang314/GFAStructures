@@ -1,4 +1,6 @@
 export Subunit
+export rotate!
+export translate!
 
 mutable struct Subunit
     position::MVector{3, Float64}

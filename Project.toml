@@ -1,2 +1,7 @@
+name = "GFAStructures"
+uuid = "dd501c97-6069-414f-9844-50371c896043"
+authors = ["Michael Wang <michael.wang.physics@gmail.com>"]
+version = "0.1.0"
+
 [deps]
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"

@@ -127,7 +127,8 @@ function format_for_mathematica!(system::System; params = [], file::String = "TE
     for subunit in system.subunits
         x, y, z = subunit.position
         b1, b2 = subunit.body_axis
-        subunit_data *= "{{$x, $y, $z}, {$(b1[1]), $(b1[2]), $(b1[3])}, {$(b2[1]), $(b2[2]), $(b2[3])}, $param_str},"
+        energy = get_energy(subunit)
+        subunit_data *= "{{$x, $y, $z}, {$(b1[1]), $(b1[2]), $(b1[3])}, {$(b2[1]), $(b2[2]), $(b2[3])}, $energy, $param_str},"
     end
     subunit_data = replace(chop(subunit_data) * "}", "e" => "*^")
 

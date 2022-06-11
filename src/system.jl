@@ -121,7 +121,7 @@ function format_for_mathematica!(system::System; params = [], file::String = "TE
     for p in params
         param_str *= "$p,"
     end
-    param_str *= chop(param_str) * "}"
+    param_str = chop(param_str) * "}"
 
     subunit_data = "{"
     for subunit in system.subunits

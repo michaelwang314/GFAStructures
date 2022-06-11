@@ -11,7 +11,7 @@ mutable struct System
     integrator::TemperatureQuench
 end
 
-function initialize_lattice(unit_cell::Vector{Subunit}, lattice_vectors::Vector{Vector{Float64}}, lattice_dimensions::Vector{Int64})
+function initialize_lattice(unit_cell::Vector{Subunit}, lattice_vectors::NTuple{3, Vector{Float64}}, lattice_dimensions::NTuple{3, Int64})
     subunits = Vector{Subunit}()
 
     a1, a2, a3 = lattice_vectors

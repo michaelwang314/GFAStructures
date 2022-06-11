@@ -29,7 +29,7 @@ function link(subunits::Vector{Subunit}, interactions::Vector{Tuple{Int64, Int64
 end
 
 function run_simulation!(system::System; num_steps::Int64 = 1, message_interval::Float64 = 10.0)
-
+    
 end
 
 function format_for_mathematica!(system::System; params = [], file::String = "TEMP.txt")
@@ -37,5 +37,5 @@ function format_for_mathematica!(system::System; params = [], file::String = "TE
         mkpath(dirname(file))
     end
 
-    
+
 end

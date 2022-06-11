@@ -6,6 +6,8 @@ export compute_forces!
 
 mutable struct BindingSite
     position::SVector{3, Float64}
+
+    energy::Float64
 end
 
 abstract type Interaction end
@@ -24,17 +26,17 @@ end
 
 function compute_forces!(bonds::Vector{Bond{Harmonic}})
     Threads.@threads for bond in bonds
-        s1, s2 = bond.pair
-        r1, r2 = s1.position, s2.position
-        Δx, Δy, Δz = r1[1] - r2[1], r1[2] - r2[2], r1[3] - r2[3]
+        site1, site2 = bond.pair
+        position1, position2 = site1.position, site2.position
+        Δx, Δy, Δz = position1[1] - position2[1], position1[2] - position2[2], position1[3] - position2[3]
 
-        f1, f2 = s1.force, s2.force
+        f1, f2 = site1.force, site2.force
         k = bond.interaction.k
         f2[1] = -(f1[1] = -k * Δx)
         f2[2] = -(f1[2] = -k * Δy)
         f2[3] = -(f1[3] = -k * Δz)
 
-        s1.energy = s2.energy = 0.5 * k * (Δx^2 + Δy^2 + Δz^2)
+        site1.energy = site2.energy = 0.5 * k * (Δx^2 + Δy^2 + Δz^2)
     end
 end
 

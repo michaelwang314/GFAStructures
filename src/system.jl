@@ -34,7 +34,7 @@ function link(subunits::Vector{Subunit}, interactions::Vector{Tuple{Int64, Int64
     N_sub = length(subunits)
     for i = 1 : N_sub - 1, j = i + 1 : N_sub
         sub1, sub2 = subunits[i], subunits[j]
-        sub1_pos, sub2_pos = sub_i.position, sub_j.position
+        sub1_pos, sub2_pos = sub1.position, sub2.position
         if (sub1_pos[1] - sub2_pos[1])^2 + (sub1_pos[2] - sub2_pos[2])^2 + (sub1_pos[3] - sub2_pos[3])^2 <= neighbor_cutoff^2
             for (id1, id2, interaction) in interactions
                 site1, site2 = sub1.binding_sites[id1], sub2.binding_sites[id2]

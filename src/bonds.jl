@@ -5,7 +5,7 @@ export Bond
 export compute_forces!
 
 mutable struct BindingSite
-    position::SVector{3, Float64}
+    position::MVector{3, Float64}
 
     energy::Float64
 end
@@ -27,8 +27,8 @@ end
 function compute_forces!(bonds::Vector{Bond{Harmonic}})
     Threads.@threads for bond in bonds
         site1, site2 = bond.pair
-        position1, position2 = site1.position, site2.position
-        Δx, Δy, Δz = position1[1] - position2[1], position1[2] - position2[2], position1[3] - position2[3]
+        pos1, pos2 = site1.position, site2.position
+        Δx, Δy, Δz = pos1[1] - pos2[1], pos1[2] - pos2[2], pos1[3] - pos2[3]
 
         f1, f2 = site1.force, site2.force
         k = bond.interaction.k

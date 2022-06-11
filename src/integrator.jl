@@ -17,29 +17,30 @@ function TemperatureQuench(subunits::Vector{Subunit}, step_size::Float64, T_star
 end
 
 function update_subunits!(integrator::TemperatureQuench)
+    δ = integrator.step_size
     Threads.@threads for subunit in integrator.subunits
         sub_pos = subunit.position
-        sub_force = fill!(subunit.force, 0.0)
-        sub_torque = fill!(subunit.torque, 0.0)
         
+        fx, fy, fz = 0.0, 0.0, 0.0
+        τx, τy, τz = 0.0, 0.0, 0.0
         for site in subunit.binding_sites
             site_pos = site.position
-            site_force = site.force
+            sf = site.force
             
-            sub_force .+= site_force
+            fx += sf[1]
+            fy += sf[2]
+            fz += sf[3]
             
             rx, ry, rz = site_pos[1] - sub_pos[1], site_pos[2] - sub_pos[2], site_pos[3] - sub_pos[3]
-            sub_torque[1] += ry * site_force[3] - site_force[2] * rz 
-            sub_torque[2] += -(rx * site_force[3] - site_force[1] * rz) 
-            sub_torque[3] += rx * site_force[2] - site_force[1] * ry
+            τx += ry * sf[3] - sf[2] * rz 
+            τy += -(rx * sf[3] - sf[1] * rz) 
+            τz += rx * sf[2] - sf[1] * ry
         end
 
-        δ = integrator.step_size
-        translate!(subunit, δ * sub_force[1], δ * sub_force[2], δ * sub_force[3])
-
-        τ = sqrt(sub_torque[1]^2 + sub_torque[2]^2 + sub_torque[3]^2)
+        translate!(subunit, δ * fx, δ * fy, δ * fz)
+        τ = sqrt(τx^2 + τy^2 + τz^2)
         if τ > 0.0
-            rotate!(subunit, sub_torque[1] / τ, sub_torque[2] / τ, sub_torque[3] / τ, δ * τ)
+            rotate!(subunit, τx / τ, τy / τ, τz / τ, δ * τ)
         end
     end
 end

@@ -15,9 +15,12 @@ function rotate!(subunit::Subunit, axis_x::Float64, axis_y::Float64, axis_z::Flo
     Ryx, Ryy, Ryz = axis_y * axis_x * (1 - cos) + axis_z * sin, cos + axis_y^2 * (1 - cos), axis_y * axis_z * (1 - cos) - axis_x * sin
     Rzx, Rzy, Rzz = axis_z * axis_x * (1 - cos) - axis_y * sin, axis_z * axis_y * (1 - cos) + axis_x * sin, cos + axis_z^2 * (1 - cos)
 
+    sub_pos = subunit.position
     for site in subunit.binding_sites
-        pos = site.position
-        pos[1], pos[2], pos[3] = Rxx * pos[1] + Rxy * pos[2] + Rxz * pos[3], Ryx * pos[1] + Ryy * pos[2] + Ryz * pos[3], Rzx * pos[1] + Rzy * pos[2] + Rzz * pos[3]
+        site_pos = site.position
+        rx, ry, rz = site_pos[1] - sub_pos[1], site_pos[2] - sub_pos[2], site_pos[3] - sub_pos[3],
+
+        site_pos[1], site_pos[2], site_pos[3] = sub_pos[1] + Rxx * rx + Rxy * ry + Rxz * rz, sub_pos[2] + Ryx * rx + Ryy * ry + Ryz * rz, sub_pos[3] + Rzx * rx + Rzy * ry + Rzz * rz
     end
 
     b1, b2 = subunit.body_axis

@@ -3,6 +3,8 @@ export initialize_lattice
 export link
 export run_simulation!
 export format_for_mathematica!
+export save!
+export load
 
 mutable struct System{I <: Interaction}
     subunits::Vector{Subunit}
@@ -135,4 +137,23 @@ function format_for_mathematica!(system::System; params = [], file::String = "TE
     open(file, "w") do io
         write(io, subunit_data)
     end
+end
+
+function save!(system::System; file = "TEMP.out")
+    if !isdir(dirname(file))
+        mkpath(dirname(file))
+    end
+
+    open(file, "w") do f
+        serialize(f, system)
+    end
+end
+
+function load(file = "")
+    system = begin
+        open(file, "r") do f
+            deserialize(f)
+        end
+    end
+    return system
 end

@@ -1,5 +1,6 @@
 module GFAStructures
     using StaticArrays
+    using Serialization
 
     """
     Flush output so that jobs can be monitored on a cluster.

@@ -43,7 +43,7 @@ function link(subunits::Vector{Subunit}, interactions::Vector{Tuple{Int64, Int64
                     push!(bonds, Bond((site1, site2), interaction))
                 end
 
-                if false && id1 != id2
+                if id1 != id2
                     site1, site2 = sub1.binding_sites[id2], sub2.binding_sites[id1]
                     site1_pos, site2_pos = site1.position, site2.position
                     if (site1_pos[1] - site2_pos[1])^2 + (site1_pos[2] - site2_pos[2])^2 + (site1_pos[3] - site2_pos[3])^2 <= bond_cutoff^2

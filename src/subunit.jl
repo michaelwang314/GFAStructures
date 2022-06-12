@@ -18,7 +18,7 @@ function rotate!(subunit::Subunit, axis_x::Float64, axis_y::Float64, axis_z::Flo
     sub_pos = subunit.position
     for site in subunit.binding_sites
         site_pos = site.position
-        rx, ry, rz = site_pos[1] - sub_pos[1], site_pos[2] - sub_pos[2], site_pos[3] - sub_pos[3],
+        rx, ry, rz = site_pos[1] - sub_pos[1], site_pos[2] - sub_pos[2], site_pos[3] - sub_pos[3]
 
         site_pos[1], site_pos[2], site_pos[3] = sub_pos[1] + Rxx * rx + Rxy * ry + Rxz * rz, sub_pos[2] + Ryx * rx + Ryy * ry + Ryz * rz, sub_pos[3] + Rzx * rx + Rzy * ry + Rzz * rz
     end

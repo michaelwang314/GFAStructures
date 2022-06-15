@@ -6,9 +6,9 @@ export format_for_mathematica!
 export save!
 export load
 
-mutable struct System
+mutable struct System{I <: Interaction}
     subunits::Vector{Subunit}
-    bonds::Vector{Bond}
+    bonds::Vector{Bond{I}}
 
     integrator::GradientDescent
 end
@@ -30,8 +30,8 @@ function initialize_lattice(unit_cell::Vector{Subunit}, lattice_vectors::NTuple{
 end
 initialize_lattice(unit_cell::Vector{Subunit}, lattice_vectors::NTuple{2, Vector{Float64}}, lattice_dimensions::NTuple{2, Int64}) = initialize_lattice(unit_cell, (lattice_vectors[1], lattice_vectors[2], [0.0, 0.0, 1.0]), (lattice_dimensions[1], lattice_dimensions[2], 1))
 
-function link(subunits::Vector{Subunit}, interactions::Vector{Tuple{Int64, Int64, <:Interaction}}, neighbor_cutoff::Float64, bond_cutoff::Float64)
-    bonds = Vector{Bond}()
+function link(subunits::Vector{Subunit}, interactions::Vector{Tuple{Int64, Int64, I}}, neighbor_cutoff::Float64, bond_cutoff::Float64) where I <: Interaction
+    bonds = Vector{Bond{I}}()
     
     N_sub = length(subunits)
     for i = 1 : N_sub - 1, j = i + 1 : N_sub
@@ -85,7 +85,7 @@ function hr_min_sec(time::Float64)
                   seconds < 10 ? ":0" : ":", seconds)
 end
 
-function run_simulation!(system::System; num_steps::Int64 = 1, message_interval::Float64 = 10.0)
+function run_simulation!(system::System{I}; num_steps::Int64 = 1, message_interval::Float64 = 10.0) where I <: Interaction
     println("Simulation started.............................................")
     println("Number of subunits: ", length(system.subunits))
     println("Number of bonds: ", length(system.bonds))

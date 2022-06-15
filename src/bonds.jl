@@ -31,7 +31,7 @@ mutable struct Bond{I <: Interaction}
     interaction::I
 end
 
-function compute_forces!(bond::Bond{Harmonic})
+function compute_force!(bond::Bond{Harmonic})
     site1, site2 = bond.pair
     pos1, pos2 = site1.position, site2.position
     Δx, Δy, Δz = pos1[1] - pos2[1], pos1[2] - pos2[2], pos1[3] - pos2[3]
@@ -45,7 +45,7 @@ function compute_forces!(bond::Bond{Harmonic})
     site1.energy = site2.energy = 0.5 * k * (Δx^2 + Δy^2 + Δz^2)
 end
 
-function compute_forces!(bond::Bond{LennardJones})
+function compute_force!(bond::Bond{LennardJones})
     site1, site2 = bond.pair
     pos1, pos2 = site1.position, site2.position
     Δx, Δy, Δz = pos1[1] - pos2[1], pos1[2] - pos2[2], pos1[3] - pos2[3]
@@ -66,6 +66,6 @@ end
 
 function compute_forces!(bonds::Vector{Bond})
     Threads.@threads for bond in bonds
-        compute_forces!(bond)
+        compute_force!(bond)
     end
 end

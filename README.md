@@ -1,2 +1,2 @@
-# GFARelax
+# GFAStructures
 Geometrically-frustrated assemblies

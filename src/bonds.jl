@@ -54,7 +54,7 @@ function compute_forces!(bond::Bond{LennardJones})
     if Δr² < bond.interaction.cutoff^2
         f1, f2 = site1.force, site2.force
 
-        invΔr² = bond.interaction.σ^2 / Δr^2
+        invΔr² = bond.interaction.σ^2 / Δr²
         invΔr⁶ = invΔr²^3
         coef = bond.interaction.ϵ * (48.0 * invΔr⁶ - 24.0) * invΔr⁶ / Δr²
 

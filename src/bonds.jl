@@ -51,7 +51,7 @@ function compute_forces!(bond::Bond{LennardJones})
     Δx, Δy, Δz = pos1[1] - pos2[1], pos1[2] - pos2[2], pos1[3] - pos2[3]
     Δr² = Δx^2 + Δy^2 + Δz^2
 
-    if Δr² < bond.cutoff^2
+    if Δr² < bond.interaction.cutoff^2
         f1, f2 = site1.force, site2.force
 
         invΔr² = bond.interaction.σ^2 / Δr^2

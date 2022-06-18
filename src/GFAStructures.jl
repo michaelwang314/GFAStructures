@@ -2,6 +2,10 @@ module GFAStructures
     using StaticArrays
     using Serialization
 
+    export RigidSubunit, InteractionSite, rotate!, translate!
+    export CellList, PairList
+    export HarmonicBond, LennardJones
+
     """
     Flush output so that jobs can be monitored on a cluster.
     """

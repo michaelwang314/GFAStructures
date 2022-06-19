@@ -1,6 +1,12 @@
 module GFAStructures
     using StaticArrays
+    using LinearAlgebra
     using Serialization
+
+    export RigidSubunit, InteractionSite, rotate!, translate!
+    export NeighborList, CellList, PairList
+    export Interaction, HarmonicBond, LennardJones, HertzianSphere
+    export System, initialize_lattice, find_pairs, run_simulation!, save!, load
 
     """
     Flush output so that jobs can be monitored on a cluster.
@@ -11,8 +17,9 @@ module GFAStructures
         flush(io)
     end
 
-    include("bonds.jl")
     include("subunit.jl")
-    include("integrator.jl")
+    include("neighbor_lists.jl")
+    include("interactions.jl")
+    include("integrators.jl")
     include("system.jl")
 end

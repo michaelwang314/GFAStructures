@@ -1,7 +1,7 @@
 abstract type Integrator end
 
 mutable struct GradientDescent <: Integrator
-    subunits::Vector{Subunit}
+    subunits::Vector{RigidSubunit}
 
     step_size::Float64
 

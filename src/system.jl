@@ -1,10 +1,10 @@
 struct System
-    subunits::Vector{Subunit}
+    subunits::Vector{RigidSubunit}
     interactions::Vector{<:Interaction}
     integrator::Integrator
 end
 
-function initialize_lattice(unit_cell::Vector{Subunit}, lattice_vectors::NTuple{3, Vector{Float64}}, dims::NTuple{3, Int64})
+function initialize_lattice(unit_cell::Vector{RigidSubunit}, lattice_vectors::NTuple{3, Vector{Float64}}, dims::NTuple{3, Int64})
     subunits = Vector{Subunit}()
     a1, a2, a3 = lattice_vectors
     for i = 0 : dims[1] - 1, j = 0 : dims[2] - 1, k = 0 : dims[3] - 1
@@ -15,11 +15,11 @@ function initialize_lattice(unit_cell::Vector{Subunit}, lattice_vectors::NTuple{
     end
     return subunits
 end
-function initialize_lattice(unit_cell::Vector{Subunit}, lattice_vectors::NTuple{2, Vector{Float64}}, dims::NTuple{2, Int64})
+function initialize_lattice(unit_cell::Vector{RigidSubunit}, lattice_vectors::NTuple{2, Vector{Float64}}, dims::NTuple{2, Int64})
     return initialize_lattice(unit_cell, (lattice_vectors[1], lattice_vectors[2], [0.0, 0.0, 1.0]), (dims[1], dims[2], 1))
 end
 
-function find_neighbors(subunits::Vector{Subunit}, neighbor_cutoff::Float64, interaction_matrix::Matrix{Bool})
+function find_neighbors(subunits::Vector{RigidSubunit}, neighbor_cutoff::Float64, interaction_matrix::Matrix{Bool})
     interaction_sites = Vector{InteractionSite}()
     neighbors = Vector{Vector{InteractionSite}}()
 
@@ -42,7 +42,7 @@ function find_neighbors(subunits::Vector{Subunit}, neighbor_cutoff::Float64, int
     return interaction_sites, neighbors
 end
 
-function get_energy(subunits::Vector{Subunit})
+function get_energy(subunits::Vector{RigidSubunit})
     energy = 0.0
     for subunit in subunits
         energy += get_energy(subunit)

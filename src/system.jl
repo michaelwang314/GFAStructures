@@ -47,7 +47,8 @@ end
 function check_neighbors(neighbors::Vector{Vector{InteractionSite}})
     counts = Dict{Int64, Int64}()
     for list in neighbors
-        if haskey(counts, length(list))
+        size = length(list)
+        if haskey(counts, size)
             counts[size] += 1
         else
             counts[size] = 1

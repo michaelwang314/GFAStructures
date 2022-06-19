@@ -4,7 +4,7 @@ mutable struct InteractionSite
 
     exclude::Bool
     energy::Float64
-    id::NTuple{2, Int64}
+    id::Int64
 end
 
 struct RigidSubunit
@@ -47,3 +47,13 @@ function translate!(subunit::RigidSubunit, Δx::Float64, Δy::Float64, Δz::Floa
     end
 end
 translate!(subunit::RigidSubunit, Δr::V) where V <: AbstractVector = translate!(subunit, Δr[1], Δr[2], Δr[3])
+
+function get_energy(subunit::Subunit)
+    energy = 0.0
+    for site in subunit.interaction_sites
+        if !site.exclude
+            energy += site.energy
+        end
+    end
+    return energy
+end

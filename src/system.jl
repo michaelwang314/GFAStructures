@@ -5,7 +5,7 @@ struct System
 end
 
 function initialize_lattice(unit_cell::Vector{RigidSubunit}, lattice_vectors::NTuple{3, Vector{Float64}}, dims::NTuple{3, Int64})
-    subunits = Vector{Subunit}()
+    subunits = Vector{RigidSubunit}()
     a1, a2, a3 = lattice_vectors
     for i = 0 : dims[1] - 1, j = 0 : dims[2] - 1, k = 0 : dims[3] - 1
         for subunit in deepcopy(unit_cell)

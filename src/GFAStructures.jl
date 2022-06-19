@@ -6,7 +6,7 @@ module GFAStructures
     export RigidSubunit, InteractionSite, rotate!, translate!
     export NeighborList, CellList, PairList
     export Interaction, HarmonicBond, LennardJones, HertzianSphere
-    export System, initialize_lattice, find_pairs, run_simulation!, save!, load
+    export System, initialize_lattice, find_neighbors, run_simulation!, save!, load
 
     """
     Flush output so that jobs can be monitored on a cluster.

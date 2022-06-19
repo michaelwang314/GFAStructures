@@ -19,7 +19,7 @@ function initialize_lattice(unit_cell::Vector{RigidSubunit}, lattice_vectors::NT
     return initialize_lattice(unit_cell, (lattice_vectors[1], lattice_vectors[2], [0.0, 0.0, 1.0]), (dims[1], dims[2], 1))
 end
 
-function find_neighbors(subunits::Vector{RigidSubunit}, neighbor_cutoff::Float64, interaction_matrix::Matrix{Bool})
+function find_neighbors(subunits::Vector{RigidSubunit}, subunit_cutoff::Float64, neighbor_cutoff::Float64, interaction_matrix::Matrix{Bool})
     interaction_sites = Vector{InteractionSite}()
     neighbors = Vector{Vector{InteractionSite}}()
 
@@ -27,10 +27,12 @@ function find_neighbors(subunits::Vector{RigidSubunit}, neighbor_cutoff::Float64
     for i = 1 : N, site_i in subunits[i].interaction_sites
         neighbor_list = Vector{InteractionSite}()
         for j = 1 : N, site_j in subunits[j].interaction_sites
-            if interaction_matrix[site_i.id, site_j.id] && i != j
-                if (site_i.position[1] - site_j.position[1])^2 + (site_i.position[2] - site_j.position[2])^2 + (site_i.position[3] - site_j.position[3])^2 <= neighbor_cutoff^2
-                    push!(neighbor_list, site_j)
-                end
+            if i == j || !interaction_matrix[site_i.id, site_j.id] || sum((subunits[i].position .- subunits[j].position).^2) > subunit_cutoff^2
+                continue
+            end
+
+            if sum((site_i.position .- site_j.position).^2) <= neighbor_cutoff^2
+                push!(neighbor_list, site_j)
             end
         end
         if !isempty(neighbor_list)

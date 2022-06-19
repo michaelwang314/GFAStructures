@@ -58,7 +58,7 @@ function translate!(subunit::RigidSubunit, Δx::Float64, Δy::Float64, Δz::Floa
 end
 translate!(subunit::RigidSubunit, Δr::V) where V <: AbstractVector = translate!(subunit, Δr[1], Δr[2], Δr[3])
 
-function get_energy(subunit::Subunit)
+function get_energy(subunit::RigidSubunit)
     energy = 0.0
     for site in subunit.interaction_sites
         if !site.exclude

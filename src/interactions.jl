@@ -1,4 +1,4 @@
-abstract type InteractionType end
+abstract type Interaction end
 
 struct HarmonicBond <: Interaction
     k::Float64

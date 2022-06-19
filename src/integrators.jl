@@ -10,12 +10,12 @@ mutable struct GradientDescent <: Integrator
     quench_duration::Int64
 end
 
-function GradientDescent(subunits::Vector{Subunit}, step_size::Float64, ampl_start::Float64, quench_duration::Int64)
+function GradientDescent(subunits::Vector{RigidSubunit}, step_size::Float64, ampl_start::Float64, quench_duration::Int64)
     Δampl = ampl_start / quench_duration
 
     return GradientDescent(subunits, step_size, ampl_start, Δampl, quench_duration)
 end
-function GradientDescent(subunits::Vector{Subunit}, step_size::Float64)
+function GradientDescent(subunits::Vector{RigidSubunit}, step_size::Float64)
     return GradientDescent(subunits, step_size, 0.0, 0.0, 0)
 end
 

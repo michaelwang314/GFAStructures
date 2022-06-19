@@ -8,7 +8,7 @@ mutable struct InteractionSite
 end
 
 function InteractionSite(position::V, id::Int64; exclude::Bool = false) where V <: AbstractVector
-    return InteractionSite(position, zeros(3), exclude, 0.0, id)
+    return InteractionSite(position, MVector{3}(0.0, 0.0, 0.0), exclude, 0.0, id)
 end
 
 struct RigidSubunit

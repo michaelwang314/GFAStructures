@@ -45,10 +45,9 @@ function find_neighbors(subunits::Vector{RigidSubunit}, subunit_cutoff::Float64,
 end
 
 function check_neighbors(neighbors::Vector{Vector{InteractionSite}})
-    sizes = unique!(length.(neighbors))
     counts = Dict{Int64, Int64}()
-    for size in sizes
-        if haskey(counts, size)
+    for list in neighbors
+        if haskey(counts, length(list))
             counts[size] += 1
         else
             counts[size] = 1
@@ -57,7 +56,7 @@ function check_neighbors(neighbors::Vector{Vector{InteractionSite}})
 
     println("There are $(length(neighbors)) interaction sites with neighbors")
     for (size, count) in counts
-        println("    $count have $size neighbors")
+        println("    $count interaction site(s) $size neighbor(s)")
     end
 end
 

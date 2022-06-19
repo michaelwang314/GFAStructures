@@ -13,6 +13,16 @@ struct RigidSubunit
     body_axes::MVector{2, MVector{3, Float64}}
 end
 
+function RigidSubunit(interaction_sites::Vector{InteractionSite})
+    position = MVector{3}(0.0, 0.0, 0.0)
+    for site in interaction_sites
+        position .+= site.position
+    end
+    position ./= length(interaction_sites)
+
+    return RigidSubunit(position, interaction_sites, ([1.0, 0.0, 0.0], [0.0, 1.0, 0.0]))
+end
+
 function rotate!(subunit::RigidSubunit, axis_x::Float64, axis_y::Float64, axis_z::Float64, θ::Float64)
     sin, cos = sincos(θ)
     Rxx, Rxy, Rxz = cos + axis_x^2 * (1 - cos), axis_x * axis_y * (1 - cos) - axis_z * sin, axis_x * axis_z * (1 - cos) + axis_y * sin

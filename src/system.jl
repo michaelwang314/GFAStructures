@@ -25,23 +25,38 @@ function find_neighbors(subunits::Vector{RigidSubunit}, subunit_cutoff::Float64,
 
     N = length(subunits)
     for i = 1 : N, site_i in subunits[i].interaction_sites
-        neighbor_list = Vector{InteractionSite}()
+        temp_neighbor_list = Vector{InteractionSite}()
         for j = 1 : N, site_j in subunits[j].interaction_sites
-            if i == j || !interaction_matrix[site_i.id, site_j.id] || sum((subunits[i].position .- subunits[j].position).^2) > subunit_cutoff^2
-                continue
-            end
-
-            if sum((site_i.position .- site_j.position).^2) <= neighbor_cutoff^2
-                push!(neighbor_list, site_j)
+            if i != j && interaction_matrix[site_i.id, site_j.id] && sum((subunits[i].position .- subunits[j].position).^2) <= subunit_cutoff^2 && sum((site_i.position .- site_j.position).^2) <= neighbor_cutoff^2
+                push!(temp_neighbor_list, site_j)
             end
         end
-        if !isempty(neighbor_list)
+
+        if !isempty(temp_neighbor_list)
             push!(interaction_sites, site_i)
-            push!(neighbors, neighbor_list)
+            push!(neighbors, temp_neighbor_list)
         end
     end
 
     return interaction_sites, neighbors
+end
+
+function sort_by_id(interaction_sites::Vector{InteractionSite}, neighbors::Vector{Vector{InteractionSite}}, site_ids::Vector{Int64}, neighbor_ids::Vector{Int64})
+    sorted_sites = Vector{InteractionSite}()
+    sorted_neighbors = Vector{Vector{InteractionSite}}()
+    for (i, site) in enumerate(interaction_sites)
+        temp_neighbor_list = Vector{InteractionSite}()
+        for neighbor in neighbors[i]
+            if site.id in site_ids && neighbor.id in neighbor_ids
+                push!(temp_neighbor_list, neighbor)
+            end
+        end
+        if !isempty(temp_neighbor_list)
+            push!(sorted_sites, site)
+            push!(sorted_neighbors, temp_neighbor_list)
+        end
+    end
+    return sorted_sites, sorted_neighbors
 end
 
 function get_neighbor_statistics(neighbors::Vector{Vector{InteractionSite}})
@@ -55,7 +70,8 @@ function get_neighbor_statistics(neighbors::Vector{Vector{InteractionSite}})
         end
     end
 
-    println("There are $(length(neighbors)) interaction sites with neighbors")
+    println("Getting neighbor statistics...")
+    println("There are $(length(neighbors)) interaction sites with neighbors:")
     for (size, count) in counts
         println("    $count interaction site(s) with $size neighbor(s)")
     end

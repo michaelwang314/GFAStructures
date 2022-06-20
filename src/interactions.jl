@@ -10,7 +10,17 @@ function compute_forces!(hb::HarmonicBond)
     Threads.@threads for (i, site) in collect(enumerate(hb.neighbor_list.interaction_sites))
         for neighbor in hb.neighbor_list.neighbors[i]
             Δx, Δy, Δz = site.position[1] - neighbor.position[1], site.position[2] - neighbor.position[2], site.position[3] - neighbor.position[3]
-            coef = (hb.r0 == 0 ? -hb.k : -hb.k * (1.0 - hb.r0 / sqrt(Δx^2 + Δy^2 + Δz^2)))
+            if hb.r0 == 0.0
+                coef = -hb.k
+                if !site.exclude
+                    site.energy += 0.5 * hb.k * (Δx^2 + Δy^2 + Δz^2)
+                end
+            else
+                coef = -hb.k * (1.0 - hb.r0 / sqrt(Δx^2 + Δy^2 + Δz^2))
+                if !site.exclude
+                    site.energy += 0.5 * hb.k * (sqrt(Δx^2 + Δy^2 + Δz^2) - hb.r0)^2
+                end
+            end
 
             site.force[1] += coef * Δx
             site.force[2] += coef * Δy
@@ -39,6 +49,10 @@ function compute_forces!(lj::LennardJones{FixedPairList})
                 site.force[1] += coef * Δx
                 site.force[2] += coef * Δy
                 site.force[3] += coef * Δz
+
+                if !site.exclude
+                    #add lj energy.  currently not needed
+                end
             end
         end
     end
@@ -55,20 +69,7 @@ struct HertzianSphere{NL <: NeighborList} <: Interaction
 end
 
 function compute_forces!(hs::HertzianSphere{FixedPairList})
-    Threads.@threads for (i, site) in collect(enumerate(hs.neighbor_list.interaction_sites))
-        for neighbor in hs.neighbor_list.neighbors[i]
-            Δx, Δy, Δz = site.position[1] - neighbor.position[1], site.position[2] - neighbor.position[2], site.position[3] - neighbor.position[3]
-            Δr² = Δx^2 + Δy^2 + Δz^2
 
-            if Δr² < hs.σ^2
-                coef = hs.ϵ * sqrt(1 - sqrt(Δr²) / hs.σ)^5
-
-                site.force[1] += coef * Δx
-                site.force[2] += coef * Δy
-                site.force[3] += coef * Δz
-            end
-        end
-    end
 end
 
 function compute_forces!(hs::HertzianSphere{CellList})

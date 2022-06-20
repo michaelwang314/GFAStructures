@@ -15,6 +15,8 @@ struct RigidSubunit
     position::MVector{3, Float64}
     interaction_sites::Vector{InteractionSite}
     body_axes::MVector{2, MVector{3, Float64}}
+
+    energy::Float64
 end
 
 function RigidSubunit(interaction_sites::Vector{InteractionSite})
@@ -24,7 +26,7 @@ function RigidSubunit(interaction_sites::Vector{InteractionSite})
     end
     position ./= length(interaction_sites)
 
-    return RigidSubunit(position, interaction_sites, ([1.0, 0.0, 0.0], [0.0, 1.0, 0.0]))
+    return RigidSubunit(position, interaction_sites, ([1.0, 0.0, 0.0], [0.0, 1.0, 0.0]), 0.0)
 end
 
 function rotate!(subunit::RigidSubunit, axis_x::Float64, axis_y::Float64, axis_z::Float64, θ::Float64)
@@ -61,13 +63,3 @@ function translate!(subunit::RigidSubunit, Δx::Float64, Δy::Float64, Δz::Floa
     end
 end
 translate!(subunit::RigidSubunit, Δr::V) where V <: AbstractVector = translate!(subunit, Δr[1], Δr[2], Δr[3])
-
-function get_energy(subunit::RigidSubunit)
-    energy = 0.0
-    for site in subunit.interaction_sites
-        if !site.exclude
-            energy += site.energy
-        end
-    end
-    return energy
-end

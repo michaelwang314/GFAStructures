@@ -80,7 +80,7 @@ end
 function get_energy(subunits::Vector{RigidSubunit})
     energy = 0.0
     for subunit in subunits
-        energy += get_energy(subunit)
+        energy += subunit.energy
     end
     return energy / 2
 end
@@ -140,7 +140,7 @@ function format_for_mathematica(system::System, file::String; params = [])
     for subunit in system.subunits
         x, y, z = subunit.position
         b1, b2 = subunit.body_axes
-        energy = get_energy(subunit)
+        energy = subunit.energy
         subunit_data *= "{{$x, $y, $z}, {$(b1[1]), $(b1[2]), $(b1[3])}, {$(b2[1]), $(b2[2]), $(b2[3])}, $energy, $param_str},"
     end
     subunit_data = replace(chop(subunit_data) * "}", "e" => "*^")

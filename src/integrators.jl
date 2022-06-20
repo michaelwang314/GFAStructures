@@ -23,6 +23,7 @@ function update_subunits!(integrator::GradientDescent)
     Threads.@threads for subunit in integrator.subunits        
         fx, fy, fz = 0.0, 0.0, 0.0
         τx, τy, τz = 0.0, 0.0, 0.0
+        energy = 0.0
         for site in subunit.interaction_sites            
             fx += site.force[1] + (integrator.ampl > 0.0 ? integrator.ampl * randn() : 0.0)
             fy += site.force[2] + (integrator.ampl > 0.0 ? integrator.ampl * randn() : 0.0)
@@ -33,7 +34,12 @@ function update_subunits!(integrator::GradientDescent)
             τy += -(rx * site.force[3] - site.force[1] * rz) 
             τz += rx * site.force[2] - site.force[1] * ry
 
+            if !site.exclude
+                energy += site.energy
+            end
+
             fill!(site.force, 0.0)
+            site.energy = 0.0
         end
 
         translate!(subunit, integrator.step_size * fx, integrator.step_size * fy, integrator.step_size * fz)
@@ -41,6 +47,7 @@ function update_subunits!(integrator::GradientDescent)
         if τ > 0.0
             rotate!(subunit, τx / τ, τy / τ, τz / τ, integrator.step_size * τ)
         end
+        subunit.energy = energy
     end
     integrator.ampl = (integrator.ampl > 0.0 ? integrator.ampl - integrator.Δampl : 0.0)
 end

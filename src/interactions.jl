@@ -7,7 +7,7 @@ struct HarmonicBond <: Interaction
 end
 
 function compute_forces!(hb::HarmonicBond)
-    Threads.@threads for (i, site) in enumerate(hb.neighbor_list.interaction_sites)
+    Threads.@threads for (i, site) in collect(enumerate(hb.neighbor_list.interaction_sites))
         for neighbor in hb.neighbor_list.neighbors[i]
             Δx, Δy, Δz = site.position[1] - neighbor.position[1], site.position[2] - neighbor.position[2], site.position[3] - neighbor.position[3]
             coef = (hb.r0 == 0 ? -hb.k : -hb.k * (1.0 - hb.r0 / sqrt(Δx^2 + Δy^2 + Δz^2)))
@@ -27,7 +27,7 @@ struct LennardJones{NL <: NeighborList} <: Interaction
 end
 
 function compute_forces!(lj::LennardJones{FixedPairList})
-    Threads.@threads for (i, site) in enumerate(lj.neighbor_list.interaction_sites)
+    Threads.@threads for (i, site) in collect(enumerate(lj.neighbor_list.interaction_sites))
         for neighbor in lj.neighbor_list.neighbors[i]
             Δx, Δy, Δz = site.position[1] - neighbor.position[1], site.position[2] - neighbor.position[2], site.position[3] - neighbor.position[3]
             Δr² = Δx^2 + Δy^2 + Δz^2
@@ -55,7 +55,7 @@ struct HertzianSphere{NL <: NeighborList} <: Interaction
 end
 
 function compute_forces!(hs::HertzianSphere{FixedPairList})
-    Threads.@threads for (i, site) in hs.neighbor_list.interaction_sites
+    Threads.@threads for (i, site) in collect(enumerate(hs.neighbor_list.interaction_sites))
         for neighbor in hs.neighbor_list.neighbors[i]
             Δx, Δy, Δz = site.position[1] - neighbor.position[1], site.position[2] - neighbor.position[2], site.position[3] - neighbor.position[3]
             Δr² = Δx^2 + Δy^2 + Δz^2

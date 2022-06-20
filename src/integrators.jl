@@ -39,7 +39,7 @@ function update_subunits!(integrator::GradientDescent)
         translate!(subunit, integrator.step_size * fx, integrator.step_size * fy, integrator.step_size * fz)
         τ = sqrt(τx^2 + τy^2 + τz^2)
         if τ > 0.0
-            rotate!(subunit, τx / τ, τy / τ, τz / τ, δ * τ)
+            rotate!(subunit, τx / τ, τy / τ, τz / τ, integrator.step_size * τ)
         end
     end
     integrator.ampl = (integrator.ampl > 0.0 ? integrator.ampl - integrator.Δampl : 0.0)

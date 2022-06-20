@@ -19,12 +19,12 @@ function initialize_lattice(unit_cell::Vector{RigidSubunit}, lattice_vectors::NT
     return initialize_lattice(unit_cell, (lattice_vectors[1], lattice_vectors[2], [0.0, 0.0, 1.0]), (dims[1], dims[2], 1))
 end
 
-function get_energy(subunits::Vector{RigidSubunit})
+function get_energy_density(subunits::Vector{RigidSubunit})
     energy = 0.0
     for subunit in subunits
         energy += subunit.energy
     end
-    return energy / 2
+    return 0.5 * energy / length(subunits)
 end
 
 function hr_min_sec(time::Float64)
@@ -38,7 +38,7 @@ function hr_min_sec(time::Float64)
 end
 
 function run_simulation!(system::System; num_steps::Int64 = 1, message_interval::Float64 = 10.0)
-    println("Simulation started.............................................")
+    println("Simulation started..........................................................................................")
     println("Number of subunits: ", length(system.subunits))
     
     prev_step = 0
@@ -58,13 +58,13 @@ function run_simulation!(system::System; num_steps::Int64 = 1, message_interval:
                     step, "/", num_steps, " (", round(step / num_steps * 100, digits = 1), "%) | ",
                     round(rate, digits = 1), " steps/s | ",
                     hr_min_sec((num_steps - step) / rate), " | ", 
-                    "energy = ", get_energy(system.subunits))
+                    "energy/monomer = ", get_energy_density(system.subunits))
             prev_step = step
             interval_start = time()
         end
     end
     println("Average steps/s: ", round(num_steps / time_elapsed, digits = 1))
-    println("Simulation done................................................")
+    println("Simulation done.............................................................................................")
 end
 
 function format_for_mathematica(system::System, file::String; params = [])

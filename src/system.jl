@@ -49,7 +49,7 @@ function sort_by_id(neighbor_map::Vector{Tuple{InteractionSite, Vector{Interacti
             end
         end
         if !isempty(temp_neighbor_list)
-            push!(sorted_neighbor_map, (interaction_site, temp_neighbor_list))
+            push!(sorted_neighbor_map, (site, temp_neighbor_list))
         end
     end
     return sorted_neighbor_map

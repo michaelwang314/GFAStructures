@@ -23,7 +23,7 @@ function update_subunits!(integrator::GradientDescent)
     Threads.@threads for subunit in integrator.subunits        
         fx, fy, fz = 0.0, 0.0, 0.0
         τx, τy, τz = 0.0, 0.0, 0.0
-        for site in subunit.binding_sites            
+        for site in subunit.interaction_sites            
             fx += site.force[1] + (integrator.ampl > 0.0 ? integrator.ampl * randn() : 0.0)
             fy += site.force[2] + (integrator.ampl > 0.0 ? integrator.ampl * randn() : 0.0)
             fz += site.force[3] + (integrator.ampl > 0.0 ? integrator.ampl * randn() : 0.0)

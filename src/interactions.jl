@@ -59,7 +59,7 @@ function compute_forces!(lj::LennardJones{FixedPairList})
 end
 
 function compute_forces!(lj::LennardJones{CellList})
-
+    #to be added
 end
 
 struct HertzianSphere{NL <: NeighborList} <: Interaction
@@ -69,9 +69,9 @@ struct HertzianSphere{NL <: NeighborList} <: Interaction
 end
 
 function compute_forces!(hs::HertzianSphere{FixedPairList})
-
+    #to be added
 end
 
 function compute_forces!(hs::HertzianSphere{CellList})
-
+    #to be added
 end

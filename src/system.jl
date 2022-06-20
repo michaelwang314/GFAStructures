@@ -19,60 +19,6 @@ function initialize_lattice(unit_cell::Vector{RigidSubunit}, lattice_vectors::NT
     return initialize_lattice(unit_cell, (lattice_vectors[1], lattice_vectors[2], [0.0, 0.0, 1.0]), (dims[1], dims[2], 1))
 end
 
-function find_neighbors(subunits::Vector{RigidSubunit}, subunit_cutoff::Float64, neighbor_cutoff::Float64, interaction_matrix::Matrix{Bool})
-    neighbor_map = Vector{Tuple{InteractionSite, Vector{InteractionSite}}}()
-
-    N = length(subunits)
-    for i = 1 : N, site_i in subunits[i].interaction_sites
-        temp_neighbor_list = Vector{InteractionSite}()
-        for j = 1 : N, site_j in subunits[j].interaction_sites
-            if i != j && interaction_matrix[site_i.id, site_j.id] && sum((subunits[i].position .- subunits[j].position).^2) <= subunit_cutoff^2 && sum((site_i.position .- site_j.position).^2) <= neighbor_cutoff^2
-                push!(temp_neighbor_list, site_j)
-            end
-        end
-
-        if !isempty(temp_neighbor_list)
-            push!(neighbor_map, (site_i, temp_neighbor_list))
-        end
-    end
-
-    return neighbor_map
-end
-
-function sort_by_id(neighbor_map::Vector{Tuple{InteractionSite, Vector{InteractionSite}}}, site_ids::Vector{Int64}, neighbor_ids::Vector{Int64})
-    sorted_neighbor_map = Vector{Tuple{InteractionSite, Vector{InteractionSite}}}()
-    for (site, neighbors) in neighbor_map
-        temp_neighbor_list = Vector{InteractionSite}()
-        for neighbor in neighbors
-            if site.id in site_ids && neighbor.id in neighbor_ids
-                push!(temp_neighbor_list, neighbor)
-            end
-        end
-        if !isempty(temp_neighbor_list)
-            push!(sorted_neighbor_map, (site, temp_neighbor_list))
-        end
-    end
-    return sorted_neighbor_map
-end
-
-function get_neighbor_statistics(neighbor_map::Vector{Tuple{InteractionSite, Vector{InteractionSite}}})
-    counts = Dict{Int64, Int64}()
-    for (_, neighbors) in neighbor_map
-        size = length(neighbors)
-        if haskey(counts, size)
-            counts[size] += 1
-        else
-            counts[size] = 1
-        end
-    end
-
-    println("Getting neighbor statistics...")
-    println("There are $(length(neighbor_map)) interaction sites with neighbors:")
-    for (size, count) in counts
-        println("    $count interaction site(s) with $size neighbor(s)")
-    end
-end
-
 function get_energy(subunits::Vector{RigidSubunit})
     energy = 0.0
     for subunit in subunits

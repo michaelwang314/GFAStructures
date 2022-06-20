@@ -4,7 +4,7 @@ module GFAStructures
     using Serialization
 
     export RigidSubunit, InteractionSite, rotate!, translate!
-    export NeighborList, CellList, PairList
+    export NeighborList, CellList, FixedPairList
     export Interaction, HarmonicBond, LennardJones, HertzianSphere
     export System, initialize_lattice, find_neighbors, sort_by_id, get_neighbor_statistics, run_simulation!, save!, load
 

@@ -7,7 +7,7 @@ struct HarmonicBond <: Interaction
 end
 
 function compute_forces!(hb::HarmonicBond)
-    Threads.@threads for (site, neighbors) in hb.neighbor_map
+    Threads.@threads for (site, neighbors) in hb.neighbor_list.neighbor_map
         for neighbor in neighbors
             Δx, Δy, Δz = site.position[1] - neighbor.position[1], site.position[2] - neighbor.position[2], site.position[3] - neighbor.position[3]
             if hb.r0 == 0.0
@@ -37,7 +37,7 @@ struct LennardJones{NL <: NeighborList} <: Interaction
 end
 
 function compute_forces!(lj::LennardJones{FixedPairList})
-    Threads.@threads for (site, neighbors) in lj.neighbor_map
+    Threads.@threads for (site, neighbors) in lj.neighbor_list.neighbor_map
         for neighbor in neighbors
             Δx, Δy, Δz = site.position[1] - neighbor.position[1], site.position[2] - neighbor.position[2], site.position[3] - neighbor.position[3]
             Δr² = Δx^2 + Δy^2 + Δz^2

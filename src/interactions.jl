@@ -7,9 +7,8 @@ struct HarmonicBond <: Interaction
 end
 
 function compute_forces!(hb::HarmonicBond)
-    i = 1
-    Threads.@threads for site in hb.neighbor_list.interaction_sites
-        for neighbor in hb.neighbor_list.neighbors[i]
+    Threads.@threads for (site, neighbors) in hb.neighbor_map
+        for neighbor in neighbors
             Δx, Δy, Δz = site.position[1] - neighbor.position[1], site.position[2] - neighbor.position[2], site.position[3] - neighbor.position[3]
             if hb.r0 == 0.0
                 coef = -hb.k
@@ -27,7 +26,6 @@ function compute_forces!(hb::HarmonicBond)
             site.force[2] += coef * Δy
             site.force[3] += coef * Δz
         end
-        i += 1
     end
 end
 
@@ -39,8 +37,8 @@ struct LennardJones{NL <: NeighborList} <: Interaction
 end
 
 function compute_forces!(lj::LennardJones{FixedPairList})
-    Threads.@threads for (i, site) in collect(enumerate(lj.neighbor_list.interaction_sites))
-        for neighbor in lj.neighbor_list.neighbors[i]
+    Threads.@threads for (site, neighbors) in lj.neighbor_map
+        for neighbor in neighbors
             Δx, Δy, Δz = site.position[1] - neighbor.position[1], site.position[2] - neighbor.position[2], site.position[3] - neighbor.position[3]
             Δr² = Δx^2 + Δy^2 + Δz^2
 

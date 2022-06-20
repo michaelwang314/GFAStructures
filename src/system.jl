@@ -20,8 +20,7 @@ function initialize_lattice(unit_cell::Vector{RigidSubunit}, lattice_vectors::NT
 end
 
 function find_neighbors(subunits::Vector{RigidSubunit}, subunit_cutoff::Float64, neighbor_cutoff::Float64, interaction_matrix::Matrix{Bool})
-    interaction_sites = Vector{InteractionSite}()
-    neighbors = Vector{Vector{InteractionSite}}()
+    neighbor_map = Vector{Tuple{InteractionSite, Vector{InteractionSite}}}()
 
     N = length(subunits)
     for i = 1 : N, site_i in subunits[i].interaction_sites
@@ -33,36 +32,33 @@ function find_neighbors(subunits::Vector{RigidSubunit}, subunit_cutoff::Float64,
         end
 
         if !isempty(temp_neighbor_list)
-            push!(interaction_sites, site_i)
-            push!(neighbors, temp_neighbor_list)
+            push!(neighbor_map, (site_i, temp_neighbor_list))
         end
     end
 
-    return interaction_sites, neighbors
+    return neighbor_map
 end
 
-function sort_by_id(interaction_sites::Vector{InteractionSite}, neighbors::Vector{Vector{InteractionSite}}, site_ids::Vector{Int64}, neighbor_ids::Vector{Int64})
-    sorted_sites = Vector{InteractionSite}()
-    sorted_neighbors = Vector{Vector{InteractionSite}}()
-    for (i, site) in enumerate(interaction_sites)
+function sort_by_id(neighbor_map::Vector{Tuple{InteractionSite, Vector{InteractionSite}}}, site_ids::Vector{Int64}, neighbor_ids::Vector{Int64})
+    sorted_neighbor_map = Vector{Tuple{InteractionSite, Vector{InteractionSite}}}()
+    for (interaction_site, neighbors) in neighbor_map
         temp_neighbor_list = Vector{InteractionSite}()
-        for neighbor in neighbors[i]
+        for neighbor in neighbors
             if site.id in site_ids && neighbor.id in neighbor_ids
                 push!(temp_neighbor_list, neighbor)
             end
         end
         if !isempty(temp_neighbor_list)
-            push!(sorted_sites, site)
-            push!(sorted_neighbors, temp_neighbor_list)
+            push!(sorted_neighbor_map, (interaction_site, temp_neighbor_list))
         end
     end
-    return sorted_sites, sorted_neighbors
+    return sorted_neighbor_map
 end
 
-function get_neighbor_statistics(neighbors::Vector{Vector{InteractionSite}})
+function get_neighbor_statistics(neighbor_map::Vector{Tuple{InteractionSite, Vector{InteractionSite}}})
     counts = Dict{Int64, Int64}()
-    for list in neighbors
-        size = length(list)
+    for (_, nlist) in neighbor_map
+        size = length(nlist)
         if haskey(counts, size)
             counts[size] += 1
         else
@@ -71,7 +67,7 @@ function get_neighbor_statistics(neighbors::Vector{Vector{InteractionSite}})
     end
 
     println("Getting neighbor statistics...")
-    println("There are $(length(neighbors)) interaction sites with neighbors:")
+    println("There are $(length(neighbor_map)) interaction sites with neighbors:")
     for (size, count) in counts
         println("    $count interaction site(s) with $size neighbor(s)")
     end

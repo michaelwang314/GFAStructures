@@ -41,7 +41,7 @@ end
 
 function sort_by_id(neighbor_map::Vector{Tuple{InteractionSite, Vector{InteractionSite}}}, site_ids::Vector{Int64}, neighbor_ids::Vector{Int64})
     sorted_neighbor_map = Vector{Tuple{InteractionSite, Vector{InteractionSite}}}()
-    for (interaction_site, neighbors) in neighbor_map
+    for (site, neighbors) in neighbor_map
         temp_neighbor_list = Vector{InteractionSite}()
         for neighbor in neighbors
             if site.id in site_ids && neighbor.id in neighbor_ids
@@ -57,8 +57,8 @@ end
 
 function get_neighbor_statistics(neighbor_map::Vector{Tuple{InteractionSite, Vector{InteractionSite}}})
     counts = Dict{Int64, Int64}()
-    for (_, nlist) in neighbor_map
-        size = length(nlist)
+    for (_, neighbors) in neighbor_map
+        size = length(neighbors)
         if haskey(counts, size)
             counts[size] += 1
         else

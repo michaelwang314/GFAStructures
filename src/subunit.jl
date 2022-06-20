@@ -11,7 +11,7 @@ function InteractionSite(position::V, id::Int64; exclude::Bool = false) where V 
     return InteractionSite(position, MVector{3}(0.0, 0.0, 0.0), exclude, 0.0, id)
 end
 
-struct RigidSubunit
+mutable struct RigidSubunit
     position::MVector{3, Float64}
     interaction_sites::Vector{InteractionSite}
     body_axes::MVector{2, MVector{3, Float64}}

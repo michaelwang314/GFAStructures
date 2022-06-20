@@ -7,7 +7,8 @@ struct HarmonicBond <: Interaction
 end
 
 function compute_forces!(hb::HarmonicBond)
-    Threads.@threads for (i, site) in collect(enumerate(hb.neighbor_list.interaction_sites))
+    i = 1
+    Threads.@threads for site in hb.neighbor_list.interaction_sites
         for neighbor in hb.neighbor_list.neighbors[i]
             Δx, Δy, Δz = site.position[1] - neighbor.position[1], site.position[2] - neighbor.position[2], site.position[3] - neighbor.position[3]
             if hb.r0 == 0.0
@@ -26,6 +27,7 @@ function compute_forces!(hb::HarmonicBond)
             site.force[2] += coef * Δy
             site.force[3] += coef * Δz
         end
+        i += 1
     end
 end
 

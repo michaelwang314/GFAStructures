@@ -6,6 +6,7 @@ module GFAStructures
     export RigidSubunit, InteractionSite, rotate!, translate!
     export NeighborList, CellList, FixedPairList
     export Interaction, HarmonicBond, LennardJones, HertzianSphere
+    export GradientDescent
     export System, initialize_lattice, find_neighbors, sort_by_id, get_neighbor_statistics, run_simulation!, save!, load
 
     """

@@ -1,2 +1,2 @@
 # GFAStructures
-Geometrically-frustrated assemblies
+This file to be updated...

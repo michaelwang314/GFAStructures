@@ -7,8 +7,8 @@ struct HarmonicBond <: Interaction
 end
 
 function compute_forces!(hb::HarmonicBond)
-    Threads.@threads for (i, site) in collect(enumerate(hb.neighbor_list.interaction_sites))
-        for neighbor in hb.neighbor_list.neighbors[i]
+    Threads.@threads for (site, neighbors) in hb.neighbor_list.neighbor_map
+        for neighbor in neighbors
             Δx, Δy, Δz = site.position[1] - neighbor.position[1], site.position[2] - neighbor.position[2], site.position[3] - neighbor.position[3]
             if hb.r0 == 0.0
                 coef = -hb.k
@@ -37,8 +37,8 @@ struct LennardJones{NL <: NeighborList} <: Interaction
 end
 
 function compute_forces!(lj::LennardJones{FixedPairList})
-    Threads.@threads for (i, site) in collect(enumerate(lj.neighbor_list.interaction_sites))
-        for neighbor in lj.neighbor_list.neighbors[i]
+    Threads.@threads for (site, neighbors) in lj.neighbor_list.neighbor_map
+        for neighbor in neighbors
             Δx, Δy, Δz = site.position[1] - neighbor.position[1], site.position[2] - neighbor.position[2], site.position[3] - neighbor.position[3]
             Δr² = Δx^2 + Δy^2 + Δz^2
 
@@ -59,7 +59,7 @@ function compute_forces!(lj::LennardJones{FixedPairList})
 end
 
 function compute_forces!(lj::LennardJones{CellList})
-
+    #to be added
 end
 
 struct HertzianSphere{NL <: NeighborList} <: Interaction
@@ -69,9 +69,9 @@ struct HertzianSphere{NL <: NeighborList} <: Interaction
 end
 
 function compute_forces!(hs::HertzianSphere{FixedPairList})
-
+    #to be added
 end
 
 function compute_forces!(hs::HertzianSphere{CellList})
-
+    #to be added
 end

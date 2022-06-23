@@ -7,7 +7,7 @@ To download, open Julia command line, press `]`, and use `add`
 or do
 ```
 julia> using Pkg
-julia> Pkg.add(url = "add https://github.com/michaelwang314/GFAStructures")
+julia> Pkg.add(url = "https://github.com/michaelwang314/GFAStructures")
 ```
 
 This file to be updated...

@@ -6,6 +6,10 @@ struct System
     ϵhistory::Vector{Float64}
 end
 
+function System(subunits::Vector{RigidSubunit}, interactions::Vector{I}, integrator::Integrator) where I <: Interaction
+    return System(subunits, interactions, integrator, Vector{Float64}())
+end
+
 function initialize_lattice(unit_cell::Vector{RigidSubunit}, lattice_vectors::NTuple{3, Vector{Float64}}, dims::NTuple{3, Int64})
     subunits = Vector{RigidSubunit}()
     a1, a2, a3 = lattice_vectors

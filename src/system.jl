@@ -2,6 +2,8 @@ struct System
     subunits::Vector{RigidSubunit}
     interactions::Vector{<:Interaction}
     integrator::Integrator
+
+    ϵhistory::Vector{Float64}
 end
 
 function initialize_lattice(unit_cell::Vector{RigidSubunit}, lattice_vectors::NTuple{3, Vector{Float64}}, dims::NTuple{3, Int64})
@@ -41,6 +43,7 @@ function run_simulation!(system::System; num_steps::Int64 = 1, message_interval:
     println("Simulation started..........................................................................................")
     println("Number of subunits: ", length(system.subunits))
     
+    record_interval = trunc(Int64, num_steps / 100)
     prev_step = 0
     time_elapsed = 0.0
     interval_start = time()
@@ -49,6 +52,10 @@ function run_simulation!(system::System; num_steps::Int64 = 1, message_interval:
             compute_forces!(interaction)
         end
         update_subunits!(system.integrator)
+
+        if step == 1 || step % record_interval == 0
+            push!(system.ϵhistory, get_energy_density(system.subunits))
+        end
 
         interval_time = time() - interval_start
         if interval_time > message_interval || step == num_steps
@@ -67,7 +74,7 @@ function run_simulation!(system::System; num_steps::Int64 = 1, message_interval:
     println("Simulation done.............................................................................................")
 end
 
-function format_for_mathematica(system::System, file::String; params = [])
+function format_for_mathematica(system::System, file::String; params = [], write_energies::Bool = false)
     if !isdir(dirname(file))
         mkpath(dirname(file))
     end
@@ -89,6 +96,18 @@ function format_for_mathematica(system::System, file::String; params = [])
 
     open(file, "w") do io
         write(io, subunit_data)
+    end
+
+    if write_energies
+        ϵhistory_data = "{"
+        for ϵ in system.ϵhistory
+            ϵhistory_data *= "$ϵ,"
+        end
+        ϵhistory_data = replace(chop(ϵhistory_data) * "}", "e" => "*^")
+
+        open(replace(file, ".txt" => "_EHISTORY.txt"), "w") do io
+            write(io, ϵhistory_data)
+        end
     end
 end
 

@@ -1,13 +1,14 @@
 struct System
     subunits::Vector{RigidSubunit}
     interactions::Vector{<:Interaction}
+    external_forces::Vector{<:ExternalForce}
     integrator::Integrator
 
     ϵhistory::Vector{Float64}
 end
 
-function System(subunits::Vector{RigidSubunit}, interactions::Vector{I}, integrator::Integrator) where I <: Interaction
-    return System(subunits, interactions, integrator, Vector{Float64}())
+function System(subunits::Vector{RigidSubunit}, interactions::Vector{I}, external_forces::Vector{E}, integrator::Integrator) where {I <: Interaction, E <: ExternalForce}
+    return System(subunits, interactions, external_forces, integrator, Vector{Float64}())
 end
 
 function initialize_lattice(unit_cell::Vector{RigidSubunit}, lattice_vectors::NTuple{3, Vector{Float64}}, dims::NTuple{3, Int64})
@@ -54,6 +55,9 @@ function run_simulation!(system::System; num_steps::Int64 = 1, message_interval:
     for step = 1 : num_steps
         for interaction in system.interactions
             compute_forces!(interaction)
+        end
+        for external_force in system.external_forces
+            compute_forces!(external_force)
         end
         update_subunits!(system.integrator)
 

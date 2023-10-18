@@ -23,6 +23,4 @@ module GFAStructures
     include("interactions.jl")
     include("integrators.jl")
     include("system.jl")
-
-    "TEST"
 end

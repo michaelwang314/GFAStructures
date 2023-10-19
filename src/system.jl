@@ -7,7 +7,7 @@ struct System
     ϵhistory::Vector{Float64}
 end
 
-function System(subunits::Vector{RigidSubunit}, interactions::Vector{I}, external_forces::Vector{E}, integrator::Integrator) where {I <: Interaction, E <: ExternalForce}
+function System(subunits::Vector{RigidSubunit}, interactions::Vector{I}, integrator::Integrator; external_forces::Vector{E} = []) where {I <: Interaction, E <: ExternalForce}
     return System(subunits, interactions, external_forces, integrator, Vector{Float64}())
 end
 

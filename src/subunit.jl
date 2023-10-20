@@ -64,6 +64,8 @@ function translate!(subunit::RigidSubunit, Δx::Float64, Δy::Float64, Δz::Floa
 end
 translate!(subunit::RigidSubunit, Δr::V) where V <: AbstractVector = translate!(subunit, Δr[1], Δr[2], Δr[3])
 
-function morph!(subunit::RigidSubunit, displacements::Vector{Vector{Float64}})
-    #to be added
+function morph!(subunit::RigidSubunit, site_displacements::Vector{Vector{Float64}})
+    for (i, a) in enumerate(site_displacements)
+        #subunit.interaction_sites[i].position .+= 
+    end
 end

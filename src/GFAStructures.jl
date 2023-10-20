@@ -3,7 +3,7 @@ module GFAStructures
     using LinearAlgebra
     using Serialization
 
-    export RigidSubunit, InteractionSite, rotate!, translate!
+    export RigidSubunit, InteractionSite, rotate!, translate!, morph!
     export NeighborList, CellList, FixedPairList
     export Interaction, HarmonicBond, LennardJones, HertzianSphere
     export ExternalForce, AnisotropicSpring, ConstantForce

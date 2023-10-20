@@ -8,10 +8,6 @@ struct CellList <: NeighborList
     interaction_matrix::Matrix{Bool}
 end
 
-function update_neighbor_list!(cell_list::CellList)
-    #to be added
-end
-
 struct FixedPairList <: NeighborList
     neighbor_map::Vector{Tuple{InteractionSite, Vector{InteractionSite}}}
 end

@@ -26,7 +26,7 @@ function initialize_lattice(unit_cell::Vector{RigidSubunit}, lattice_vectors::NT
     return initialize_lattice(unit_cell, (lattice_vectors[1], lattice_vectors[2], [0.0, 0.0, 1.0]), (dims[1], dims[2], 1))
 end
 
-function get_energy_density(subunits::Vector{RigidSubunit})
+function get_energy_per_subunit(subunits::Vector{RigidSubunit})
     energy = 0.0
     for subunit in subunits
         energy += subunit.energy
@@ -65,7 +65,7 @@ function run_simulation!(system::System; num_steps::Int64 = 1, message_interval:
         update_subunits!(system.integrator)
 
         if step == 1 || step % record_interval == 0
-            push!(system.ϵhistory, get_energy_density(system.subunits))
+            push!(system.ϵhistory, get_energy_per_subunit(system.subunits))
         end
 
         interval_time = time() - interval_start
@@ -76,7 +76,7 @@ function run_simulation!(system::System; num_steps::Int64 = 1, message_interval:
                     step, "/", num_steps, " (", round(step / num_steps * 100, digits = 1), "%) | ",
                     round(rate, digits = 1), " steps/s | ",
                     hr_min_sec((num_steps - step) / rate), " | ", 
-                    "energy/monomer = ", get_energy_density(system.subunits))
+                    "energy/subunit = ", get_energy_per_subunit(system.subunits))
             prev_step = step
             interval_start = time()
         end

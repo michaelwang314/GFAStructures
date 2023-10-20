@@ -59,9 +59,7 @@ function run_simulation!(system::System; num_steps::Int64 = 1, message_interval:
         for external_force in system.external_forces
             compute_forces!(external_force)
         end
-        for subunit in system.subunits
-            compute_energy!(subunit)
-        end
+        update_energies!(system.subunits)
         update_subunits!(system.integrator)
 
         if step == 1 || step % record_interval == 0

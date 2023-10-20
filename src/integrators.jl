@@ -34,7 +34,6 @@ function update_subunits!(integrator::GradientDescent)
             τz += rx * site.force[2] - site.force[1] * ry
 
             fill!(site.force, 0.0)
-            site.energy = 0.0
         end
 
         translate!(subunit, integrator.step_size * fx, integrator.step_size * fy, integrator.step_size * fz)
@@ -44,4 +43,17 @@ function update_subunits!(integrator::GradientDescent)
         end
     end
     integrator.ampl = (integrator.ampl > 0.0 ? integrator.ampl - integrator.Δampl : 0.0)
+end
+
+function update_energies!(subunits::Vector{RigidSubunit})
+    for subunit in subunits
+        energy = 0.0
+        for site in subunit.interaction_sites
+            if !site.exclude
+                energy += site.energy
+            end
+            site.energy = 0.0
+        end
+        subunit.energy = energy
+    end
 end

@@ -65,7 +65,9 @@ end
 translate!(subunit::RigidSubunit, Δr::V) where V <: AbstractVector = translate!(subunit, Δr[1], Δr[2], Δr[3])
 
 function morph!(subunit::RigidSubunit, site_displacements::Vector{Vector{Float64}})
+    n, d = subunit.body_axes
+    dxn = cross(d, n)
     for (i, a) in enumerate(site_displacements)
-        #subunit.interaction_sites[i].position .+= 
+        subunit.interaction_sites[i].position .+= a[1] .* dxn .+ a[2] .* d .+ a[3] .* n
     end
 end

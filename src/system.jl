@@ -48,7 +48,7 @@ function run_simulation!(system::System; num_steps::Int64 = 1, message_interval:
     println("Simulation started..........................................................................................")
     println("Number of subunits: ", length(system.subunits))
     
-    record_interval = trunc(Int64, num_steps / 100)
+    record_interval = trunc(Int64, num_steps / 1000)
     prev_step = 0
     time_elapsed = 0.0
     interval_start = time()

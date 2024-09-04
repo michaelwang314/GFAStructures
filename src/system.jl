@@ -44,11 +44,10 @@ function hr_min_sec(time::Float64)
                   seconds < 10 ? ":0" : ":", seconds)
 end
 
-function run_simulation!(system::System; num_steps::Int64 = 1, message_interval::Float64 = 10.0)
+function run_simulation!(system::System; num_steps::Int64 = 1, message_interval::Float64 = 10.0, record_energy_interval:Int64 = 1000)
     println("Simulation started..........................................................................................")
     println("Number of subunits: ", length(system.subunits))
     
-    record_interval = trunc(Int64, num_steps / 1000)
     prev_step = 0
     time_elapsed = 0.0
     interval_start = time()
@@ -62,7 +61,7 @@ function run_simulation!(system::System; num_steps::Int64 = 1, message_interval:
         update_energies!(system.subunits)
         update_subunits!(system.integrator)
 
-        if step == 1 || step % record_interval == 0
+        if step == 1 || step % record_energy_interval == 0
             push!(system.ϵhistory, get_energy_per_subunit(system.subunits))
         end
 

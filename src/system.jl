@@ -44,7 +44,7 @@ function hr_min_sec(time::Float64)
                   seconds < 10 ? ":0" : ":", seconds)
 end
 
-function run_simulation!(system::System; num_steps::Int64 = 1, message_interval::Float64 = 10.0, record_energy_interval:Int64 = 1000)
+function run_simulation!(system::System; num_steps::Int64 = 1, message_interval::Float64 = 10.0, record_energy_interval::Int64 = 1000)
     println("Simulation started..........................................................................................")
     println("Number of subunits: ", length(system.subunits))
     

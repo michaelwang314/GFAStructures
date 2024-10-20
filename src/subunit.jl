@@ -38,11 +38,9 @@ function rotate!(subunit::RigidSubunit, axis_x::Float64, axis_y::Float64, axis_z
     for site in subunit.interaction_sites
         rx, ry, rz = site.position[1] - subunit.position[1], site.position[2] - subunit.position[2], site.position[3] - subunit.position[3]
 
-        site.position[1], site.position[2], site.position[3] = begin
-            subunit.position[1] + Rxx * rx + Rxy * ry + Rxz * rz,
-            subunit.position[2] + Ryx * rx + Ryy * ry + Ryz * rz,
-            subunit.position[3] + Rzx * rx + Rzy * ry + Rzz * rz
-        end 
+        site.position[1] = subunit.position[1] + Rxx * rx + Rxy * ry + Rxz * rz
+        site.position[2] = subunit.position[2] + Ryx * rx + Ryy * ry + Ryz * rz
+        site.position[3] = subunit.position[3] + Rzx * rx + Rzy * ry + Rzz * rz
     end
 
     for b in subunit.body_axes
@@ -50,6 +48,40 @@ function rotate!(subunit::RigidSubunit, axis_x::Float64, axis_y::Float64, axis_z
     end
 end
 rotate!(subunit::RigidSubunit, axis::V, θ::Float64) where V <: AbstractVector = rotate!(subunit, axis[1], axis[2], axis[3], θ)
+
+function rotate!(subunit::RigidSubunit, origin_x::Float64, origin_y::Float64, origin_z::Float64, axis_x::Float64, axis_y::Float64, axis_z::Float64, θ::Float64)
+    sin, cos = sincos(θ)
+    Rxx, Rxy, Rxz = cos + axis_x^2 * (1 - cos), axis_x * axis_y * (1 - cos) - axis_z * sin, axis_x * axis_z * (1 - cos) + axis_y * sin
+    Ryx, Ryy, Ryz = axis_y * axis_x * (1 - cos) + axis_z * sin, cos + axis_y^2 * (1 - cos), axis_y * axis_z * (1 - cos) - axis_x * sin
+    Rzx, Rzy, Rzz = axis_z * axis_x * (1 - cos) - axis_y * sin, axis_z * axis_y * (1 - cos) + axis_x * sin, cos + axis_z^2 * (1 - cos)
+
+    rx, ry, rz = subunit.position[1] - origin_x, subunit.position[2] - origin_y, subunit.position[3] - origin_z
+
+    subunit.position[1] = origin_x + Rxx * rx + Rxy * ry + Rxz * rz
+    subunit.position[2] = origin_y + Ryx * rx + Ryy * ry + Ryz * rz
+    subunit.position[3] = origin_z + Rzx * rx + Rzy * ry + Rzz * rz
+
+    for site in subunit.interaction_sites
+        rx, ry, rz = site.position[1] - origin_x, site.position[2] - origin_y, site.position[3] - origin_z
+
+        site.position[1] = origin_x + Rxx * rx + Rxy * ry + Rxz * rz
+        site.position[2] = origin_y + Ryx * rx + Ryy * ry + Ryz * rz
+        site.position[3] = origin_z + Rzx * rx + Rzy * ry + Rzz * rz
+    end
+
+    for b in subunit.body_axes
+        b[1], b[2], b[3] = Rxx * b[1] + Rxy * b[2] + Rxz * b[3], Ryx * b[1] + Ryy * b[2] + Ryz * b[3], Rzx * b[1] + Rzy * b[2] + Rzz * b[3]
+    end
+end
+
+function rotate!(subunits::Vector{RigidSubunit}, origin_x::Float64, origin_y::Float64, origin_z::Float64, axis_x::Float64, axis_y::Float64, axis_z::Float64, θ::Float64)
+    for subunit in subunits
+        rotate!(subunit, origin_x, origin_y, origin_z, axis_x, axis_y, axis_z, θ)
+    end
+end
+rotate!(subunits::Vector{RigidSubunit}, origin::Vo, axis::Va, θ::Float64) where {Vo <: AbstractVector, Va <: AbstractVector} = rotate!(subunits, origin[1], origin[2], origin[3], axis[1], axis[2], axis[3], θ)
+rotate!(subunits::Vector{RigidSubunit}, origin::V, axis_x::Float64, axis_y::Float64, axis_z::Float64, θ::Float64) where V <: AbstractVector = rotate!(subunits, origin[1], origin[2], origin[3], axis_x, axis_y, axis_z, θ)
+rotate!(subunits::Vector{RigidSubunit}, origin_x::Float64, origin_y::Float64, origin_z::Float64, axis::V, θ::Float64) where V <: AbstractVector = rotate!(subunits, origin_x, origin_y, origin_z, axis[1], axis[2], axis[3], θ)
 
 function translate!(subunit::RigidSubunit, Δx::Float64, Δy::Float64, Δz::Float64)
     subunit.position[1] += Δx

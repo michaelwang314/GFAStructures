@@ -73,6 +73,9 @@ function rotate!(subunit::RigidSubunit, origin_x::Float64, origin_y::Float64, or
         b[1], b[2], b[3] = Rxx * b[1] + Rxy * b[2] + Rxz * b[3], Ryx * b[1] + Ryy * b[2] + Ryz * b[3], Rzx * b[1] + Rzy * b[2] + Rzz * b[3]
     end
 end
+rotate!(subunit::RigidSubunit, origin::Vo, axis::Va, θ::Float64) where {Vo <: AbstractVector, Va <: AbstractVector} = rotate!(subunit, origin[1], origin[2], origin[3], axis[1], axis[2], axis[3], θ)
+rotate!(subunit::RigidSubunit, origin::V, axis_x::Float64, axis_y::Float64, axis_z::Float64, θ::Float64) where V <: AbstractVector = rotate!(subunit, origin[1], origin[2], origin[3], axis_x, axis_y, axis_z, θ)
+rotate!(subunit::RigidSubunit, origin_x::Float64, origin_y::Float64, origin_z::Float64, axis::V, θ::Float64) where V <: AbstractVector = rotate!(subunit, origin_x, origin_y, origin_z, axis[1], axis[2], axis[3], θ)
 
 function rotate!(subunits::Vector{RigidSubunit}, origin_x::Float64, origin_y::Float64, origin_z::Float64, axis_x::Float64, axis_y::Float64, axis_z::Float64, θ::Float64)
     for subunit in subunits

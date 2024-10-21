@@ -99,6 +99,13 @@ function translate!(subunit::RigidSubunit, Δx::Float64, Δy::Float64, Δz::Floa
 end
 translate!(subunit::RigidSubunit, Δr::V) where V <: AbstractVector = translate!(subunit, Δr[1], Δr[2], Δr[3])
 
+function translate!(subunits::Vector{RigidSubunit}, Δx::Float64, Δy::Float64, Δz::Float64)
+    for subunit in subunits
+        translate!(subunit, Δx, Δy, Δz)
+    end
+end
+translate!(subunits::Vector{RigidSubunit}, Δr::V) where V <: AbstractVector = translate!(subunits, Δr[1], Δr[2], Δr[3])
+
 function morph!(subunit::RigidSubunit, site_displacements::Vector{Vector{Float64}})
     n, d = subunit.body_axes
     dxn = cross(d, n)

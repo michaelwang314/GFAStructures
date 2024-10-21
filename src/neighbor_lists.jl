@@ -37,6 +37,25 @@ function find_neighbors(subunits::Vector{RigidSubunit}, subunit_cutoff::Float64,
 
     return neighbor_map
 end
+function find_neighbors(subunits::Vector{RigidSubunit}, subunit_cutoff::Float64, neighbor_cutoff::Float64)
+    neighbor_map = Vector{Tuple{InteractionSite, Vector{InteractionSite}}}()
+
+    N = length(subunits)
+    for i = 1 : N, site_i in subunits[i].interaction_sites
+        temp_neighbor_list = Vector{InteractionSite}()
+        for j = 1 : N, site_j in subunits[j].interaction_sites
+            if i != j && sum((subunits[i].position .- subunits[j].position).^2) <= subunit_cutoff^2 && sum((site_i.position .- site_j.position).^2) <= neighbor_cutoff^2
+                push!(temp_neighbor_list, site_j)
+            end
+        end
+
+        if !isempty(temp_neighbor_list)
+            push!(neighbor_map, (site_i, temp_neighbor_list))
+        end
+    end
+
+    return neighbor_map
+end
 
 function sort_by_id(neighbor_map::Vector{Tuple{InteractionSite, Vector{InteractionSite}}}, site_ids::Vector{Int64}, neighbor_ids::Vector{Int64})
     sorted_neighbor_map = Vector{Tuple{InteractionSite, Vector{InteractionSite}}}()

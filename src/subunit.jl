@@ -113,3 +113,8 @@ function morph!(subunit::RigidSubunit, site_displacements::Vector{Vector{Float64
         subunit.interaction_sites[i].position .+= a[1] .* dxn .+ a[2] .* d .+ a[3] .* n
     end
 end
+function morph!(subunits::Vector{RigidSubunit}, site_displacements::Vector{Vector{Float64}})
+    for subunit in subunits
+        morph!(subunit, site_displacements)
+    end
+end

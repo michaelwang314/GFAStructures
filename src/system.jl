@@ -26,6 +26,29 @@ function initialize_lattice(unit_cell::Vector{RigidSubunit}, lattice_vectors::NT
     return initialize_lattice(unit_cell, (lattice_vectors[1], lattice_vectors[2], [0.0, 0.0, 1.0]), (dims[1], dims[2], 1))
 end
 
+function trim_singles!(subunits::Vector{RigidSubunit}, subunit_cutoff::Float64; repeat::Int64 = 1)
+    indices_to_delete = Vector{Int64}()
+    N = length(subunits)
+    for i = 1 : N
+        num_neighbors = 0
+        for j = 1 : N
+            if i != j && sum((subunits[i].position .- subunits[j].position).^2) <= subunit_cutoff^2
+                num_neighbors += 1
+            end
+        end
+        if num_neighbors == 1
+            push!(indices_to_delete, i)
+        end
+    end
+
+    deleteat!(subunits, indices_to_delete)
+    println("$(length(indices_to_delete)) subunits trimmed")
+
+    if repeat > 1
+        trim_singles!(subunits, subunit_cutoff; repeat = repeat - 1)
+    end
+end
+
 function get_energy_per_subunit(subunits::Vector{RigidSubunit})
     energy = 0.0
     for subunit in subunits

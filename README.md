@@ -1,5 +1,7 @@
 # GFAStructures
 
+<img src="https://github.com/michaelwang314/GFAStructures/blob/main/examples/structures_example.png" width="250">
+
 ## Introduction
 
 The purpose of this package is to simulate the relaxation of geometrically frustrated assemblies made up of misfitting subunits.  One can define the shape of the subunits (via the positions of their interaction sites) and their inter-subunit interactions (e.g. Harmonic springs, Lennard-Jones) with certain connectivities. See ... for more details as well as example codes in the examples folder.

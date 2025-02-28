@@ -1,6 +1,8 @@
 # GFAStructures
 
-<img src="https://github.com/michaelwang314/GFAStructures/blob/main/examples/structures_example.png" width="250">
+<p align="center">
+    <img src="https://github.com/michaelwang314/GFAStructures/blob/main/examples/structures_example.png" width="750">
+</p>
 
 ## Introduction
 

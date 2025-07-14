@@ -19,7 +19,7 @@ function FixedPairList(subunits::Vector{RigidSubunit}, cutoff::Float64, interact
 end
 
 function create_interaction_matrix(num_ids::Int64, pairs::Vector{Tuple{Int64, Int64}}; symmetric::Bool = true)
-    interaction_matrix = Matrix{Bool}(undef, num_ids, num_ids)
+    interaction_matrix = fill!(Matrix{Bool}(undef, num_ids, num_ids), false)
     for pair in pairs
         interaction_matrix[pair[1], pair[2]] = true
         if symmetric

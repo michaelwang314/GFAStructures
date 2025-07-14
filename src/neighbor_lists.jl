@@ -18,6 +18,14 @@ function FixedPairList(subunits::Vector{RigidSubunit}, cutoff::Float64, interact
     return FixedPairList(sorted_neighbor_map)
 end
 
+function create_interaction_matrix(num_ids::Int64, pairs::Vector{Tuple{Int64, Int64}})
+    interaction_matrix = Matrix{Bool}(undef, num_ids, num_ids)
+    for pair in pairs
+        interaction_matrix[pair[1], pair[2]] = true
+    end
+    return interaction_matrix
+end
+
 function find_neighbors(subunits::Vector{RigidSubunit}, cutoff::Float64, interaction_matrix::Matrix{Bool})
     neighbor_map = Vector{Tuple{InteractionSite, Vector{InteractionSite}}}()
 

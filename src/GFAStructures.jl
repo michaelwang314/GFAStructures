@@ -8,7 +8,7 @@ module GFAStructures
     export Interaction, HarmonicBond, LennardJones, HertzianSphere
     export ExternalForce, AnisotropicSpring, ConstantForce
     export GradientDescent
-    export System, initialize_lattice, find_neighbors, sort_by_id, get_neighbor_statistics, run_simulation!, format_for_mathematica, save!, load
+    export System, initialize_lattice, create_interaction_matrix, find_neighbors, sort_by_id, get_neighbor_statistics, run_simulation!, format_for_mathematica, save!, load
 
     """
     Flush output so that jobs can be monitored on a cluster.

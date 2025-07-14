@@ -12,20 +12,20 @@ struct FixedPairList <: NeighborList
     neighbor_map::Vector{Tuple{InteractionSite, Vector{InteractionSite}}}
 end
 
-function FixedPairList(subunits::Vector{RigidSubunit}, subunit_cutoff::Float64, neighbor_cutoff::Float64, interaction_matrix::Matrix{Bool}, site_ids::Vector{Int64}, neighbor_ids::Vector{Int64})
-    neighbor_map = find_neighbors(subunits, subunit_cutoff, neighbor_cutoff, interaction_matrix)
+function FixedPairList(subunits::Vector{RigidSubunit}, cutoff::Float64, interaction_matrix::Matrix{Bool}, site_ids::Vector{Int64}, neighbor_ids::Vector{Int64})
+    neighbor_map = find_neighbors(subunits, cutoff, interaction_matrix)
     sorted_neighbor_map = sort_by_id(neighbor_map, site_ids, neighbor_ids)
     return FixedPairList(sorted_neighbor_map)
 end
 
-function find_neighbors(subunits::Vector{RigidSubunit}, subunit_cutoff::Float64, neighbor_cutoff::Float64, interaction_matrix::Matrix{Bool})
+function find_neighbors(subunits::Vector{RigidSubunit}, cutoff::Float64, interaction_matrix::Matrix{Bool})
     neighbor_map = Vector{Tuple{InteractionSite, Vector{InteractionSite}}}()
 
     N = length(subunits)
     for i = 1 : N, site_i in subunits[i].interaction_sites
         temp_neighbor_list = Vector{InteractionSite}()
         for j = 1 : N, site_j in subunits[j].interaction_sites
-            if i != j && interaction_matrix[site_i.id, site_j.id] && sum((subunits[i].position .- subunits[j].position).^2) <= subunit_cutoff^2 && sum((site_i.position .- site_j.position).^2) <= neighbor_cutoff^2
+            if i != j && interaction_matrix[site_i.id, site_j.id] && sum((site_i.position .- site_j.position).^2) <= cutoff^2
                 push!(temp_neighbor_list, site_j)
             end
         end
